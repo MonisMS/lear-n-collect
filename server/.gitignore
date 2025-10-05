@@ -1,2 +1,4 @@
 .env
 MVP_PLAN.md
+node_modules/
+dist/
