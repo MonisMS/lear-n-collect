@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { db } from './config/db.js';
+import questionRoute from './routes/questionRoute.js';
 
 
 dotenv.config();
@@ -36,6 +37,8 @@ app.get('/api/test-db', async (req, res) => {
     });
   }
 });
+
+app.use('/api/v1/questions', questionRoute)
 
 // Start server
 app.listen(PORT, () => {
