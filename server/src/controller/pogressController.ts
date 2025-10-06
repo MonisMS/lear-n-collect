@@ -4,23 +4,6 @@ import { user, userProgress } from "../models/schemas.js";
 import { and, eq } from "drizzle-orm";
 
 
-const ensureTestUser = async (sessionId: string) => {
-    const userId = parseInt(sessionId);
-    
-    // Check if user exists
-    const existingUsers = await db.select()
-        .from(user)
-        .where(eq(user.id, userId));
-    
-    if (existingUsers.length === 0) {
-        // Create test user
-        await db.insert(user).values({
-            username: `test_user_${sessionId}`,
-            email: `test_${sessionId}@example.com`,
-            password_hash: 'test_password_hash'
-        });
-    }
-};
 
 export const startProgress = async (req:Request,res:Response)=>{
    try {
@@ -30,7 +13,7 @@ export const startProgress = async (req:Request,res:Response)=>{
         return res.status(400).json({message:"Field, topic, level and sessionId are required"});
     }
 
-    await ensureTestUser(sessionId);
+
     const existingProgress = await db.select()
     .from(userProgress)
     .where(and(
