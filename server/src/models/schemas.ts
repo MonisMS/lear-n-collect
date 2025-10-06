@@ -33,6 +33,7 @@ export const userProgress = pgTable('user_progress',{
     questions_answered:integer('questions_answered').default(0).notNull(),
     correct_answers:integer('correct_answers').default(0).notNull(),
     total_questions:integer('total_questions').default(0).notNull(),
+    last_practiced:timestamp('last_practiced'),
     created_at:timestamp('created_at').defaultNow().notNull(),
     
 })
