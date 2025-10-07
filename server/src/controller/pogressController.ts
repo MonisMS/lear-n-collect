@@ -7,21 +7,35 @@ import { and, eq } from "drizzle-orm";
 
 export const startProgress = async (req:Request,res:Response)=>{
    try {
-     const { field, topic, level,sessionId } = req.body;
 
-    if(!field || !topic || !level || !sessionId){
+
+
+     const { field, topic, level } = req.body;
+     const userId = req.user?.userId;
+     
+    if(!field || !topic || !level ){
         return res.status(400).json({message:"Field, topic, level and sessionId are required"});
     }
 
+   if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "User not authenticated"
+      });
+    }
+
+   
 
     const existingProgress = await db.select()
     .from(userProgress)
     .where(and(
-        eq(userProgress.user_id, parseInt(sessionId)),
+        eq(userProgress.user_id, userId),
         eq(userProgress.field,field),
         eq(userProgress.topic,topic),
         eq(userProgress.level,level)
     ))
+
+
 
     if(existingProgress.length > 0){
   return res.json({
@@ -32,8 +46,10 @@ export const startProgress = async (req:Request,res:Response)=>{
     
    }
 
+
+
    const newProgress = await db.insert(userProgress).values({
-    user_id:parseInt(sessionId),
+    user_id: userId,
     field,
     topic,
     level,
@@ -41,6 +57,9 @@ export const startProgress = async (req:Request,res:Response)=>{
     correct_answers:0,
     total_questions:0,
    }).returning();
+
+
+
 
    res.status(201).json({
     success: true,
@@ -59,16 +78,22 @@ export const startProgress = async (req:Request,res:Response)=>{
    
 export const updateProgress = async (req:Request,res:Response)=>{
 try {
-    const { sessionId, field, topic, level, isCorrect } = req.body;
-
-    if(!sessionId || !field || !topic || !level || typeof isCorrect !== 'boolean'){
-        return res.status(400).json({message:"sessionId, field, topic, level and isCorrect are required"});
+    const { field, topic, level, isCorrect } = req.body;
+const userId = req.user?.userId;
+    if( !field || !topic || !level || typeof isCorrect !== 'boolean'){
+        return res.status(400).json({message:"userId, field, topic, level and isCorrect are required"});
+    }
+    if (!userId) {
+      return res.status(401).json({
+        success: false,
+        message: "User not authenticated"
+      });
     }
 
     const progressRecord = await db.select()
     .from(userProgress)
     .where(and(
-        eq(userProgress.user_id, parseInt(sessionId)),
+        eq(userProgress.user_id, userId),
         eq(userProgress.field,field),
         eq(userProgress.topic,topic),
         eq(userProgress.level,level)
@@ -105,8 +130,3 @@ try {
     });
 }
 }
-
-
-
-
-

@@ -5,6 +5,7 @@ import { db } from './config/db.js';
 import questionRoute from './routes/questionRoute.js';
 import progressRoute from './routes/progressRoute.js';
 import authRoute from './routes/authRoute.js';
+import { authenticateToken } from './middlewares/authMiddleware.js';
 
 
 dotenv.config();
@@ -41,8 +42,8 @@ app.get('/api/test-db', async (req, res) => {
 });
 
 app.use('/api/v1/questions', questionRoute);
-app.use('/api/v1/progress',progressRoute);
-app.use('/api/v1/auth', authRoute); 
+app.use('/api/v1/progress', authenticateToken, progressRoute);
+app.use('/api/v1/auth', authRoute);
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);

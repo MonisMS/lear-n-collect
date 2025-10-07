@@ -7,5 +7,5 @@ const questionRoute = Router();
 questionRoute.get("/",getQuestions)
 questionRoute.post("/sample",addSampleQuestion)
 questionRoute.get("/random", getRandomQuestions);
-questionRoute.post("/check", correctAnswer);
+
 export default questionRoute;
