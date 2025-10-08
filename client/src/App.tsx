@@ -1,12 +1,19 @@
 import React from 'react'
-import { Button } from './components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Auth from './pages/Auth'
 import Home from './pages/Home'
+import Quiz from './pages/Quiz'
 
 const App = () => {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Home />
+    <div className="min-h-screen bg-background">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Auth />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/quiz" element={<Quiz />} />
+        </Routes>
+      </Router>
     </div>
   )
 }
